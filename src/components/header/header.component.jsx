@@ -1,14 +1,16 @@
 import React from "react";
 import {connect} from 'react-redux';
 import {auth} from '../../firebase/firebase.utils';
+import {Link} from "react-router-dom";
+import {ReactComponent as Logo} from '../../assets/crown.svg'
+import {createStructuredSelector} from "reselect";
 
 import './header.styles.scss'
 
 import CartIcon from "../cart-icon/cart-icon.component";
 import CartDropdown from "../cart-dropdown/cart-dropdown.component";
-
-import {Link} from "react-router-dom";
-import {ReactComponent as Logo} from '../../assets/crown.svg'
+import {selectCartHidden} from "../../redux/cart/cart.selectors";
+import {selectCurrentUser} from "../../redux/user/user.selectors";
 
 const Header = ({currentUser, hiddenCartDropdown}) => (
     <div className='header'>
@@ -37,9 +39,11 @@ const Header = ({currentUser, hiddenCartDropdown}) => (
     </div>
 );
 
-const mapStateToProps = ({user: {currentUser}, cart: {hidden: hiddenCartDropdown}}) => ({
-    currentUser,
-    hiddenCartDropdown
+// createStructuredSelector is better because we don't put state param in every
+// function. It will be made automatically
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser,
+    hiddenCartDropdown: selectCartHidden
 })
 
 export default connect(mapStateToProps)(Header);
